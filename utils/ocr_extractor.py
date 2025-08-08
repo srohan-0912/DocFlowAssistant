@@ -8,7 +8,7 @@ from pdf2image import convert_from_path
 import docx2txt
 import concurrent.futures
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\Users\kavya\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\Preethi\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
 
 
 logger = logging.getLogger(__name__)
