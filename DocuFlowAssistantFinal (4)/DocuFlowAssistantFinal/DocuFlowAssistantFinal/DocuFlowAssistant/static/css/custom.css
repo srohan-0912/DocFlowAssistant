@@ -1,0 +1,198 @@
+/* Custom styles for DocuFlow AI */
+
+.upload-area {
+    border: 2px dashed var(--bs-border-color);
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: var(--bs-body-bg);
+}
+
+.upload-area:hover, 
+.upload-area.drag-over {
+    border-color: var(--bs-primary);
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.upload-content {
+    pointer-events: none;
+}
+
+.upload-area .fas {
+    color: var(--bs-secondary);
+    transition: color 0.3s ease;
+}
+
+.upload-area:hover .fas,
+.upload-area.drag-over .fas {
+    color: var(--bs-primary);
+}
+
+.extracted-text {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--bs-gray-100);
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.extracted-text pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.progress {
+    height: 8px;
+}
+
+.card {
+  background-color: var(--bs-card-bg, #303030); /* fallback to dark */
+}
+
+.card-header h5, .card-header h6 {
+    margin: 0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    background-color: var(--bs-gray-50);
+}
+.card-body {
+    flex: 1 1 auto;
+    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+    font-size: 0.775rem;
+}
+
+/* Dashboard specific styles */
+.card.bg-primary, .card.bg-success, .card.bg-warning, .card.bg-danger {
+    border: none;
+}
+
+.card.bg-primary .card-body, 
+.card.bg-success .card-body, 
+.card.bg-warning .card-body, 
+.card.bg-danger .card-body {
+    padding: 1.5rem;
+}
+
+.routing-summary {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+
+    .upload-area .fa-3x {
+        font-size: 2rem;
+    }
+
+    .btn-group-sm {
+        flex-direction: column;
+    }
+
+    .btn-group-sm > .btn {
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.processing-section .alert {
+    animation: pulse 2s infinite;
+}
+
+/* Custom scrollbar for extracted text */
+.extracted-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.extracted-text::-webkit-scrollbar-track {
+    background: var(--bs-gray-200);
+    border-radius: 3px;
+}
+
+.extracted-text::-webkit-scrollbar-thumb {
+    background: var(--bs-gray-400);
+    border-radius: 3px;
+}
+
+.extracted-text::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-gray-500);
+}
+
+/* Manual override section styling */
+.manual-override {
+    background-color: var(--bs-gray-50);
+    padding: 0.75rem;
+    border-radius: 4px;
+    border-left: 4px solid var(--bs-warning);
+}
+
+/* Status badges */
+.badge.bg-success { background-color: var(--bs-success) !important; }
+.badge.bg-warning { background-color: var(--bs-warning) !important; }
+.badge.bg-danger { background-color: var(--bs-danger) !important; }
+.badge.bg-primary { background-color: var(--bs-primary) !important; }
+.badge.bg-secondary { background-color: var(--bs-secondary) !important; }
+
+/* Table hover effects */
+.table-hover tbody tr:hover {
+    background-color: var(--bs-gray-50);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Chart container */
+#typeChart {
+    max-height: 300px;
+}
+
+.upload-area {
+    border: 2px dashed #6c757d;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    /* background-color: #f8f9fa; */
+    position: relative;
+}
+
+.upload-area .btn {
+    pointer-events: auto;
+    z-index: 10;
+    position: relative;
+}
+.brand-title {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #e0e0e0;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}

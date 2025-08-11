@@ -1,0 +1,39 @@
+Kavya Ramesh
+Chennai | kavyaramesh807@gmail.com | linkedin.com/in/kavyaramesh4212 | github.com/kavyaramesh832
+PROFILE
+CertifiedDataEngineerwithrobustskillsindatamanagement,ETLprocesses,andSQLdevelopment. Ithrivein
+collaborativeenvironmentsandenjoycontributingtoprojectsthatpromoteinnovativesolutions. Iameagerto
+continuegrowingmyabilitiesinthisfast-pacedfield
+WORK EXPERIENCE
+EvolveRobotLab(JuniorResearchFellow) Jun2024–Jul2024
+• Workedwithanengagingteamof6,learnedgenerativeAIandMachineLearningeffectivelywiththebest
+mentorship.
+• DeliveredseminarsonRNNandLSTMduringDemoDays,enhancinglearningeffectivenessby80%,andleda
+processimprovementprojecttostreamlineandunifyend-to-endserviceworkflows.
+EDUCATION
+PanimalarEngineeringCollege Fulltime 2022–2026
+BachelorofTechnologyinArtificialIntelligenceandDataScience
+StMary’sMatHr. Sec. School Fulltime 2021–2022
+HSC-73%
+StMary’sMat. Hr. Sec. School Fulltime 2019–2020
+SSLC-80%
+PROJECTS
+GenAI-PoweredPlatformforInteractiveProductCustomization:
+• BuiltagenerativeAIplatformfor3Dproductcustomization,boostingengagementby40%andspeedingup
+developmentby25%.
+AutonomousVehiclePathPlanningSystem:
+• BuiltapathplanningsystemusinganLSTMmodelfortrafficpredictionandA*algorithmforoptimalrouting.
+CERTIFICATIONS
+GenerativeAIOracleCertifiedProfessional,2024|IntroductiontoPythonandDataScienceInfosys
+Springboard,2025|CertificateofcompletionofHTML5andCSS3InfosysSpringboard,2025|AcquiringData
+NASSCOM,FutureSkillsPrime,2024|CybersecurityFundamentalsNASSCOM,FutureSkillsPrime,2023
+AWARDS/PUBLICATIONS
+• IEEEXtreme17.0|7thPECTEAMInternationalConference|8thPECTEAMInternationalConference.
+• AuthoredSCOPUS-indexedpapersonAIinthejudiciarysystemusinglegalanalyticsandonanAutonomous
+VehiclePathPlanningSystem.
+SKILLS
+Software PowerBI,Excel,PowerPoint,SQL.
+TechnicalLanguages Java,C,Python,LaTeX.(Spoken: English(Proficient),Tamil(Native))
+DECLARATION
+I(KavyaRamesh),declarethattheinformationprovidedistrueandaccuratetothebestofmyknowledgeand
+takefullresponsibilityforitsauthenticity.

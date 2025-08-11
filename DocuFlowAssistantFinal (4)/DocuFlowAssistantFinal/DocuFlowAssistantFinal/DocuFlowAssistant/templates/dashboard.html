@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocuFlow AI - Dashboard</title>
+    <link
+      href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/custom.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <img
+            src="{{ url_for('static', filename='docuFlowAi.png') }}"
+            alt="Logo"
+            style="
+              height: 40px;
+              width: 40px;
+              object-fit: contain;
+              margin-right: 8px;
+            "
+          />
+          <span class="brand-title">DocuFlow AI</span>
+        </a>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="/">Upload</a>
+          <a class="nav-link active" href="/dashboard">Dashboard</a>
+          <a class="nav-link" href="/email">Email Integration</a>
+          <a class="nav-link" href="/analytics">Analytics</a>
+          {% if current_user.is_authenticated %}
+          <span class="nav-link">Welcome, {{ current_user.username }}!</span>
+          <a class="nav-link" href="/logout">Logout</a>
+          {% else %}
+          <a class="nav-link" href="/login">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <!-- Statistics Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Total Documents</h6>
+                  <h3 class="mb-0" id="totalDocs">-</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="fas fa-file-alt fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Completed</h6>
+                  <h3 class="mb-0" id="completedDocs">-</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-warning text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Processing</h6>
+                  <h3 class="mb-0" id="processingDocs">-</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="fas fa-cog fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-danger text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Errors</h6>
+                  <h3 class="mb-0" id="errorDocs">-</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Type Distribution -->
+      <div class="row mb-4">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                <i class="fas fa-chart-pie me-2"></i>Document Type Distribution
+              </h5>
+            </div>
+            <div class="card-body">
+              <canvas id="typeChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="fas fa-route me-2"></i>Department Routing</h5>
+            </div>
+            <div class="card-body">
+              <div class="routing-summary" id="routingSummary">
+                <p class="text-muted">Loading routing information...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline Demonstration Section -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0">
+                <i class="fas fa-cogs me-2"></i>Document Processing Pipeline
+                Demo
+              </h5>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="loadPipelineDemo()"
+              >
+                <i class="fas fa-play me-1"></i>Run Demo
+              </button>
+            </div>
+            <div class="card-body">
+              <div id="pipelineDemo" style="display: none">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Pipeline Stages:</h6>
+                    <ol
+                      id="pipelineStages"
+                      class="list-group list-group-numbered"
+                    >
+                      <!-- Stages will be populated by JavaScript -->
+                    </ol>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Sample Classifications:</h6>
+                    <div id="sampleResults">
+                      <!-- Results will be populated by JavaScript -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="pipelineLoading" style="display: none">
+                <div class="text-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="mt-2">Running pipeline demonstration...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Documents Table -->
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Documents</h5>
+          <div>
+            <button
+              class="btn btn-sm btn-outline-primary"
+              onclick="refreshDashboard()"
+            >
+              <i class="fas fa-sync-alt me-1"></i>Refresh
+            </button>
+            <a href="/" class="btn btn-sm btn-primary">
+              <i class="fas fa-plus me-1"></i>Upload New
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="progressContainer" style="display: none">
+            <div class="progress">
+              <div
+                class="progress-bar"
+                id="progressBar"
+                style="width: 0%"
+              ></div>
+            </div>
+            <p id="processingStatus" class="mt-2 text-muted">Starting...</p>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Type</th>
+                  <th>Confidence</th>
+                  <th>Status</th>
+                  <th>Routed To</th>
+                  <th>Uploaded</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="documentsTable">
+                {% for doc in documents %}
+                <tr>
+                  <td>
+                    <i class="fas fa-file me-2"></i>
+                    {{ doc.original_filename }} {% if doc.manually_reclassified
+                    %}
+                    <i
+                      class="fas fa-user-edit text-warning ms-1"
+                      title="Manually reclassified"
+                    ></i>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if doc.document_type %}
+                    <span class="badge bg-primary"
+                      >{{ doc.document_type }}</span
+                    >
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if doc.confidence_score %}
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="progress me-2"
+                        style="width: 60px; height: 8px"
+                      >
+                        <div
+                          class="progress-bar"
+                          style="width: {{ (doc.confidence_score * 100)|round|int }}%"
+                        ></div>
+                      </div>
+                      <small
+                        >{{ (doc.confidence_score * 100)|round|int }}%</small
+                      >
+                    </div>
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if doc.status == 'completed' %}
+                    <span class="badge bg-success">Completed</span>
+                    {% elif doc.status == 'processing' %}
+                    <span class="badge bg-warning">Processing</span>
+                    {% elif doc.status == 'error' %}
+                    <span class="badge bg-danger">Error</span>
+                    {% else %}
+                    <span class="badge bg-secondary"
+                      >{{ doc.status.title() }}</span
+                    >
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if doc.routed_to %}
+                    <span class="text-info">{{ doc.routed_to }}</span>
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <small class="text-muted">
+                      {{ doc.uploaded_at.strftime('%b %d, %Y %I:%M:%S %p') if
+                      doc.uploaded_at else '-' }}
+                    </small>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      {% if doc.status == 'uploaded' %}
+                      <button
+                        class="btn btn-outline-primary btn-sm"
+                        onclick="processDocument({{ doc.id }})"
+                      >
+                        <i class="fas fa-play me-1"></i>Process
+                      </button>
+                      {% endif %} {% if doc.status == 'completed' %}
+                      <button
+                        class="btn btn-outline-warning btn-sm"
+                        onclick="showReclassifyModal({{ doc.id }}, '{{ doc.document_type }}')"
+                      >
+                        <i class="fas fa-edit me-1"></i>Reclassify
+                      </button>
+                      {% endif %} {% if doc.status == 'error' %}
+                      <button
+                        class="btn btn-outline-danger btn-sm me-1"
+                        onclick="processDocument({{ doc.id }}, event)"
+                      >
+                        <i class="fas fa-redo me-1"></i>Retry
+                      </button>
+
+                      <form
+                        method="POST"
+                        action="{{ url_for('dismiss_document', doc_id=doc.id) }}"
+                        style="display: inline"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-outline-secondary btn-sm ms-1"
+                          onclick="return confirm('Are you sure you want to dismiss this error?');"
+                        >
+                          <i class="fas fa-times me-1"></i>Dismiss
+                        </button>
+                                 
+                      </form>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <nav aria-label="Document pagination">
+              <ul class="pagination justify-content-center mt-4">
+                {% if documents.has_prev %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="{{ url_for('dashboard', page=documents.prev_num) }}"
+                  >
+                    &laquo; Previous
+                  </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">&laquo; Previous</span>
+                </li>
+                {% endif %} {% for p in range(1, documents.pages + 1) %}
+                <li
+                  class="page-item {% if p == documents.page %}active{% endif %}"
+                >
+                  <a class="page-link" href="{{ url_for('dashboard', page=p) }}"
+                    >{{ p }}</a
+                  >
+                </li>
+                {% endfor %} {% if documents.has_next %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="{{ url_for('dashboard', page=documents.next_num) }}"
+                  >
+                    Next &raquo;
+                  </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">Next &raquo;</span>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+
+          {% if not documents %}
+          <div class="text-center py-4">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No documents uploaded yet</h5>
+            <p class="text-muted">Upload your first document to get started</p>
+            <a href="/" class="btn btn-primary">
+              <i class="fas fa-upload me-2"></i>Upload Document
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Reclassification Modal -->
+    <div class="modal fade" id="reclassifyModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Reclassify Document</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="reclassifyForm">
+              <input type="hidden" id="reclassifyDocId" />
+              <div class="mb-3">
+                <label class="form-label">Current Classification:</label>
+                <span class="badge bg-primary" id="currentType"></span>
+              </div>
+              <div class="mb-3">
+                <label for="newType" class="form-label"
+                  >New Document Type:</label
+                >
+                <select class="form-select" id="newType" required>
+                  <option value="">Select new type...</option>
+                  <option value="Invoice">Invoice</option>
+                  <option value="Resume">Resume</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Bank Statement">Bank Statement</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              onclick="submitReclassification()"
+            >
+              <i class="fas fa-save me-1"></i>Reclassify
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="chatbot-wrapper"
+      style="position: fixed; bottom: 20px; right: 20px; z-index: 9999"
+    >
+      <!-- Minimized Icon Button -->
+      <button
+        id="chatbot-toggle"
+        class="btn btn-primary rounded-circle"
+        style="width: 50px; height: 50px"
+      >
+        <i class="fas fa-robot"></i>
+      </button>
+
+      <!-- Expanded Chatbot Box -->
+      <div
+        id="chatbot-box"
+        style="
+          display: none;
+          background: #70294eff;
+          border-radius: 12px;
+          width: 300px;
+          height: 400px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+          position: relative;
+        "
+      >
+        <div
+          class="d-flex justify-content-between align-items-center p-2 text-white"
+          style="border-bottom: 1px solid #ccc"
+        >
+          <strong><i class="fas fa-robot me-2"></i>Ask Aura</strong>
+          <button class="btn btn-sm btn-light" onclick="toggleChatbot()">
+            &times;
+          </button>
+        </div>
+        <div
+          id="chat-history"
+          style="
+            padding: 10px;
+            height: 290px;
+            overflow-y: auto;
+            background: #fff;
+            font-size: 14px;
+          "
+        ></div>
+        <div style="padding: 10px; background: #f8f9fa">
+          <input
+            type="text"
+            id="chat-query"
+            class="form-control form-control-sm"
+            placeholder="Type your message..."
+          />
+          <button
+            class="btn btn-sm btn-primary mt-2 w-100"
+            onclick="askChatbot()"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">
+          &copy; 2025 DocuFlow AI - Automated Document Processing System
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+      // Initialize dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        loadAnalytics();
+        loadDashboardStats();
+      });
+    </script>
+    <!-- ✅ Add script here just before </body> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const chatToggle = document.getElementById("chatbot-toggle");
+        const chatBox = document.getElementById("chatbot-box");
+        const chatHistory = document.getElementById("chat-history");
+        const chatInput = document.getElementById("chat-query");
+
+        function appendMessage(message, type) {
+          const msg = document.createElement("div");
+          msg.className = "mb-2";
+          msg.innerHTML =
+            type === "user"
+              ? `<div class="text-end"><span class="badge bg-primary">${message}</span></div>`
+              : `<div class="text-start"><span class="badge bg-light text-dark">${message}</span></div>`;
+          chatHistory.appendChild(msg);
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        async function askChatbot() {
+          const query = chatInput.value.trim();
+          if (!query) return;
+
+          appendMessage(query, "user");
+          chatInput.value = "";
+          chatInput.focus();
+
+          appendMessage(
+            '<i class="fas fa-spinner fa-spin text-muted"></i> Thinking...',
+            "bot"
+          );
+
+          try {
+            const res = await fetch("/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ query }),
+            });
+
+            const data = await res.json();
+            // Replace the spinner with actual response
+            chatHistory.lastChild.innerHTML = `<div class="text-start"><span class="badge bg-light text-dark">${data.response}</span></div>`;
+          } catch (error) {
+            chatHistory.lastChild.innerHTML = `<div class="text-start"><span class="badge bg-danger">Something went wrong.</span></div>`;
+            console.error("Chatbot Error:", error);
+          }
+        }
+
+        chatInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            askChatbot();
+          }
+        });
+
+        // Toggle visibility
+        function toggleChatbot() {
+          chatBox.style.display =
+            chatBox.style.display === "none" ? "block" : "none";
+        }
+
+        chatToggle.addEventListener("click", function () {
+          chatBox.style.display = "block";
+        });
+
+        window.askChatbot = askChatbot;
+        window.toggleChatbot = toggleChatbot;
+      });
+    </script>
+  </body>
+</html>

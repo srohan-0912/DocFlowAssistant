@@ -1,0 +1,77 @@
+John Smith Software Engineer
+
+Email: john.smith@example.com | Phone: (555) 1234567
+
+
+
+
+
+
+
+Summary:
+
+
+
+Highly motivated Software Engineer with 5+ years experience in full-stack development (Python, JavaScript, React, SQL). Proven ability in delivering scalable web applications and optimizing performance.
+
+
+
+
+
+Experience:
+
+
+
+Software Engineer, TechCorp Inc. | Jan 2020 Present
+
+
+
+	Developed REST APIs in Python (Flask, Django)
+
+
+
+	Improved performance by 30% through query optimization and caching
+
+
+
+	Integrated CI/CD pipelines with GitHub Actions
+
+
+
+
+
+
+
+Junior Developer, WebStart LLC | Jun 2017 Dec 2019
+
+
+
+	Built React front-end components, collaborated on Agile sprints
+
+
+
+	Automated data workflows using Python scripts
+
+
+
+
+
+
+
+Education:
+
+
+
+B.Sc. in Computer Science | University of Chennai | 2017
+
+
+
+
+
+
+
+Skills:
+
+
+
+Python, JavaScript, React, SQL, Docker, Kubernetes, Agile/Scrum
