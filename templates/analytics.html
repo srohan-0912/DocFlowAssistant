@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuFlow AI - Advanced Analytics</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+               <img src="{{ url_for('static', filename='docuFlowAi.png') }}" alt="Logo" style="height: 40px; width: 40px; object-fit: contain; margin-right: 8px;">
+                <span class = "brand-title">DocuFlow AI</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Upload</a>
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+                <a class="nav-link" href="/email">Email Integration</a>
+                <a class="nav-link active" href="/analytics">Analytics</a>
+                {% if current_user.is_authenticated %}
+                    <span class="nav-link">Welcome, {{ current_user.username }}!</span>
+                    <a class="nav-link" href="/logout">Logout</a>
+                {% else %}
+                    <a class="nav-link" href="/login">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Real-Time Processing Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary">
+                    <div class="card-body text-white">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 id="totalDocs">0</h4>
+                                <small>Total Documents</small>
+                            </div>
+                            <i class="fas fa-file-alt fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success">
+                    <div class="card-body text-white">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 id="completedDocs">0</h4>
+                                <small>Processed Successfully</small>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning">
+                    <div class="card-body text-dark">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 id="processingDocs">0</h4>
+                                <small>Currently Processing</small>
+                            </div>
+                            <i class="fas fa-sync-alt fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info">
+                    <div class="card-body text-white">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 id="avgConfidence">0%</h4>
+                                <small>Avg. Confidence</small>
+                            </div>
+                            <i class="fas fa-brain fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Charts Section -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-pie me-2"></i>Document Type Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="typeDistributionChart" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-line me-2"></i>Processing Trends (Last 7 Days)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="processingTrendsChart" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Analytics -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-bar me-2"></i>Classification Accuracy & Confidence</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="accuracyChart" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-route me-2"></i>Department Routing</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="routingChart" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Performance Metrics -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-tachometer-alt me-2"></i>Performance Metrics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h3 id="avgProcessingTime" class="text-primary">0.0s</h3>
+                                    <small>Avg Processing Time</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h3 id="ocrSuccessRate" class="text-success">0%</h3>
+                                    <small>OCR Success Rate</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h3 id="classificationAccuracy" class="text-info">0%</h3>
+                                    <small>Classification Accuracy</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h3 id="systemUptime" class="text-warning">99.9%</h3>
+                                    <small>System Uptime</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Email Integration Status</h6>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" id="emailProgress" style="width: 0%"></div>
+                                </div>
+                                <small id="emailStatus" class="text-muted">Checking email configuration...</small>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>ML Model Performance</h6>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-info" id="mlProgress" style="width: 0%"></div>
+                                </div>
+                                <small id="mlStatus" class="text-muted">Loading ML model status...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-Time Activity Feed -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-stream me-2"></i>Real-Time Activity Feed</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="toggleAutoRefresh()">
+                            <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                            <span id="refreshText">Auto Refresh: ON</span>
+                        </button>
+                    </div>
+                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                        <div id="activityFeed">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Loading recent activities...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 DocuFlow AI - Advanced Document Analytics</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let autoRefresh = true;
+        let refreshInterval;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnalytics();
+            startAutoRefresh();
+        });
+
+        function loadAnalytics() {
+            Promise.all([
+                fetch('/api/stats').then(r => r.json()),
+                fetch('/api/analytics/charts').then(r => r.json()),
+                fetch('/api/analytics/performance').then(r => r.json()),
+                fetch('/api/analytics/activity').then(r => r.json())
+            ]).then(([stats, charts, performance, activity]) => {
+                updateStats(stats);
+                updateCharts(charts);
+                updatePerformance(performance);
+                updateActivityFeed(activity);
+            }).catch(error => {
+                console.error('Error loading analytics:', error);
+            });
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalDocs').textContent = stats.total_documents || 0;
+            document.getElementById('completedDocs').textContent = stats.completed_documents || 0;
+            document.getElementById('processingDocs').textContent = stats.processing_documents || 0;
+            
+            // Calculate average confidence
+            const avgConf = stats.average_confidence || 0;
+            document.getElementById('avgConfidence').textContent = Math.round(avgConf * 100) + '%';
+        }
+        fetch('/api/analytics/charts')
+            .then(r => r.json())
+            .then(data => {
+            console.log("Chart Data: ", data);  // <- Add this
+            updateCharts(data);
+        });
+
+        function updateCharts(chartData) {
+            // Document Type Distribution Pie Chart
+            const typeDist = chartData.type_distribution || {};
+            const typeValues = Object.values(typeDist);
+            const typeLabels = Object.keys(typeDist);
+
+            if (typeValues.length === 0) {
+                document.getElementById('typeDistributionChart').innerHTML = `
+                    <div style="text-align:center; color:#ccc; margin-top:40px;">
+                        <i class="fas fa-exclamation-circle fa-2x"></i><br>No document type data available.
+                    </div>`;
+            } else {
+                const typeData = [{
+                    values: typeValues,
+                    labels: typeLabels,
+                    type: 'pie',
+                    marker: {
+                        colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3']
+                    }
+                }];
+
+                Plotly.newPlot('typeDistributionChart', typeData, {
+                    title: false,
+                    showlegend: true,
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: '#fff' }
+                });
+            }
+
+
+            // Processing Trends Line Chart
+            const trendData = [{
+                x: chartData.processing_trends?.dates || [],
+                y: chartData.processing_trends?.counts || [],
+                type: 'scatter',
+                mode: 'lines+markers',
+                line: { color: '#4ECDC4', width: 3 },
+                marker: { size: 8 }
+            }];
+
+            Plotly.newPlot('processingTrendsChart', trendData, {
+                title: false,
+                xaxis: { title: 'Date', color: '#fff' },
+                yaxis: { title: 'Documents Processed', color: '#fff' },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#fff' }
+            });
+
+            // Classification Accuracy Chart
+            const accuracyData = [{
+                x: chartData.classification_methods || [],
+                y: chartData.accuracy_scores || [],
+                type: 'bar',
+                marker: {
+                    color: ['#FF6B6B', '#4ECDC4', '#45B7D1'],
+                    opacity: 0.8
+                }
+            }];
+
+            Plotly.newPlot('accuracyChart', accuracyData, {
+                title: false,
+                xaxis: { title: 'Classification Method', color: '#fff' },
+                yaxis: { title: 'Accuracy (%)', color: '#fff' },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#fff' }
+            });
+
+            // Department Routing Donut Chart
+            const routingData = [{
+                values: Object.values(chartData.routing_distribution || {}),
+                labels: Object.keys(chartData.routing_distribution || {}),
+                type: 'pie',
+                hole: 0.4,
+                marker: {
+                    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57']
+                }
+            }];
+
+            Plotly.newPlot('routingChart', routingData, {
+                title: false,
+                showlegend: true,
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#fff' }
+            });
+        }
+
+        function updatePerformance(performance) {
+            console.log("Loaded performance data:", performance); 
+            document.getElementById('avgProcessingTime').textContent = 
+                (performance.avg_processing_time || 0).toFixed(1) + 's';
+            document.getElementById('ocrSuccessRate').textContent = 
+                Math.round((performance.ocr_success_rate || 0) * 100) + '%';
+            document.getElementById('classificationAccuracy').textContent = 
+                Math.round((performance.classification_accuracy || 0) * 100) + '%';
+
+            // Update email status
+            const emailProgress = document.getElementById('emailProgress');
+            const emailStatus = document.getElementById('emailStatus');
+            if (performance.email_configured) {
+                emailProgress.style.width = '100%';
+                emailStatus.textContent = 'Email integration active';
+                emailStatus.className = 'text-success';
+            } else {
+                emailProgress.style.width = '25%';
+                emailStatus.textContent = 'Email integration needs configuration';
+                emailStatus.className = 'text-warning';
+            }
+
+            // Update ML status
+            const mlProgress = document.getElementById('mlProgress');
+            const mlStatus = document.getElementById('mlStatus');
+            if (performance.ml_model_trained) {
+                mlProgress.style.width = '100%';
+                mlStatus.textContent = 'ML model trained and active';
+                mlStatus.className = 'text-success';
+            } else {
+                mlProgress.style.width = '50%';
+                mlStatus.textContent = 'ML model training in progress';
+                mlStatus.className = 'text-info';
+            }
+        }
+
+        function updateActivityFeed(activities) {
+            const feed = document.getElementById('activityFeed');
+            
+            if (!activities || activities.length === 0) {
+                feed.innerHTML = '<div class="text-center text-muted">No recent activities</div>';
+                return;
+            }
+
+            const feedHTML = activities.map(activity => `
+                <div class="activity-item d-flex align-items-center mb-3 p-3 border rounded">
+                    <div class="activity-icon me-3">
+                        <i class="fas ${getActivityIcon(activity.type)} fa-lg text-${getActivityColor(activity.type)}"></i>
+                    </div>
+                    <div class="activity-content flex-grow-1">
+                        <div class="activity-title fw-bold">${activity.title}</div>
+                        <div class="activity-details text-muted small">${activity.details}</div>
+                        <div class="activity-time text-muted small">
+                            <i class="fas fa-clock me-1"></i>${formatTime(activity.timestamp)}
+                        </div>
+                    </div>
+                    ${activity.status ? `<span class="badge bg-${getStatusColor(activity.status)}">${activity.status}</span>` : ''}
+                </div>
+            `).join('');
+
+            feed.innerHTML = feedHTML;
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'upload': 'fa-upload',
+                'processing': 'fa-cog',
+                'classification': 'fa-brain',
+                'routing': 'fa-route',
+                'email': 'fa-envelope',
+                'error': 'fa-exclamation-triangle'
+            };
+            return icons[type] || 'fa-info-circle';
+        }
+
+        function getActivityColor(type) {
+            const colors = {
+                'upload': 'primary',
+                'processing': 'warning',
+                'classification': 'info',
+                'routing': 'success',
+                'email': 'secondary',
+                'error': 'danger'
+            };
+            return colors[type] || 'secondary';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'completed': 'success',
+                'processing': 'warning',
+                'error': 'danger',
+                'pending': 'secondary'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+            return date.toLocaleDateString();
+        }
+
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            const refreshText = document.getElementById('refreshText');
+            const refreshIcon = document.getElementById('refreshIcon');
+            
+            if (autoRefresh) {
+                refreshText.textContent = 'Auto Refresh: ON';
+                refreshIcon.className = 'fas fa-sync-alt';
+                startAutoRefresh();
+            } else {
+                refreshText.textContent = 'Auto Refresh: OFF';
+                refreshIcon.className = 'fas fa-pause';
+                stopAutoRefresh();
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                if (autoRefresh) {
+                    loadAnalytics();
+                }
+            }, 30000); // Refresh every 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+    </script>
+</body>
+</html>

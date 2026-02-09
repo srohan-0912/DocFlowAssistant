@@ -1,0 +1,46 @@
+--- Page 1 ---
+@ +919080696554  @Chennai © srohan0712@gmail.com @ GitHub @ Linkedin
+OBJECTIVE
+Aspiring Web Developer with hands-on experience in building mini-projects and solving 300+ DSA problems.
+Proficient in modern web technologies and passionate about writing clean, efficient code. Strong problem-
+solving skills combined with a growth mindset and eagerness to learn. Committed to building user-friendly,
+real-world solutions while continuously improving through self-driven learning and innovation.
+EDUCATION PROJERTS
+e DocuFlowAl — Al-Powered Document Processing and Classification
+Panimalar Engineering * Tech Stack: Python (Flask), JavaScript, HTML,CSS, Bootstrap, Charts,
+College * OpenAl API, Tesseract OCR, Gmail API, SQLite/MySQL.
+B.E IN ELECTRONICS AND DocuFlow Al - Flask-based intelligent document ingestion & classification
+COMMUNICATIONS platform.
+2022-2026 | CGPA‘8.53 * Supports drag-and-drop & automated email document ingestion with
+. OCR text extraction.
+Sr Senkara vidya Kendra « Al/ML-powered classification with real-time analytics dashboard using
+Grad.2020 | Pere:86.6 Chartjs.
+Sri Sanjkara Vidya Kendra BMI CALCULATOR
+er ooan| see eet « Developed a responsive BMI Calculator web application using HTML,
+rac. Pere: 844 Css, and JavaScript, allowing users to input height and weight to
+° compute Body Mass Index.
+———K e Implemented real-time input validation and dynamic DOM
+manipulation to display results with color-coded BMI categories.
+LINKS . Designed a clean and modern UI layout using CSS Flexbox/Grid for
+better accessibility and visual appeal across different screen sizes.
+@ leetcode
+@ Greeks For Greeks
+@ Hackerrank CERTIFICATE
+e
+—— * Cybersecurity Fundamentals - Future skills prime
+SKILLS * Introduction To Data Science-Infosys Springboard
+* Paper presentation-CIT
+PROGRAMMING * OOP's in Java-Simplilearn
+LANGUAGE
+* HTML © CSS es
+* Java * JavaScript ACHIEVEMENTS
+« RESTAP] sau
+@ LEETCODE 100 DAYS STREAK
+BADGE
+. . @ 24-HOUR HACKATHON
+VERSION CONTROL Achieved led Days Coding Streak PARTICIPATION
+Badge On Leetcode
+° Git Collaborated in a 24-Hour
+@ Geeks For Geeks Hackathon for innovations
+* GitHub Solved 100+ problems. solutions
+| |
