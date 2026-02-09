@@ -1,0 +1,6 @@
+flask
+gunicorn
+pytesseract
+pillow
+pdf2image
+docx2txt
