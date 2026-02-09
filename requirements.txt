@@ -8,3 +8,4 @@ flask-login
 flask-sqlalchemy
 flask-bcrypt
 pytz
+requests
