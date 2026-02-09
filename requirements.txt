@@ -5,3 +5,5 @@ pillow
 pdf2image
 docx2txt
 flask-login
+flask-sqlalchemy
+flask-bcrypt
